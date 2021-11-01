@@ -1,0 +1,97 @@
+DROP DATABASE MobileShopManagementSystem;
+CREATE DATABASE MobileShopManagementSystem;
+USE MobileShopManagementSystem;
+
+CREATE TABLE customer(
+	customer_ID VARCHAR(10) NOT NULL,
+	customer_Name VARCHAR(50) NOT NULL,
+	gender VARCHAR(6) NOT NULL,
+	customer_Address VARCHAR(50) NOT NULL,
+	customer_Mobile_Number INT NOT NULL,
+	customer_Email VARCHAR(10),
+	constraint primary key(customer_ID)
+);
+
+
+CREATE TABLE orders(
+	order_ID VARCHAR(10) NOT NULL,
+	customer_ID VARCHAR(10) NOT NULL,
+	order_Date DATE NOT NULL,
+	order_Time TIME NOT NULL,
+	constraint primary key(order_ID),
+	constraint FOREIGN KEY(customer_ID) REFERENCES customer(customer_ID) on delete cascade on update cascade
+);
+
+CREATE TABLE payment(
+	payment_ID VARCHAR(10) NOT NULL,
+	order_ID VARCHAR(10) NOT NULL,
+	payment_Date DATE NOT NULL,
+	payment_Time TIME NOT NULL,
+	constraint primary key(payment_ID),
+	constraint FOREIGN KEY(order_ID) REFERENCES orders(order_ID) on delete cascade on update cascade
+);
+
+CREATE TABLE category(
+	category_ID VARCHAR(10) NOT NULL,
+	category_Name VARCHAR(50) NOT NULL,
+	constraint primary key(category_ID)
+);
+
+CREATE TABLE product(
+	product_ID VARCHAR(10) NOT NULL,
+	category_ID VARCHAR(10) NOT NULL,
+	product_Name VARCHAR(10) NOT NULL,
+	product_Price DECIMAL(10,2) NOT NULL,
+	product_QTY INT NOT NULL,
+	constraint primary key(product_ID),
+	constraint FOREIGN KEY(category_ID) REFERENCES category(category_ID) on delete cascade on update cascade
+);
+
+
+CREATE TABLE order_Detail(
+	order_ID VARCHAR(10) NOT NULL,
+	product_ID VARCHAR(10) NOT NULL,
+	QTY int NOT NULL,
+	constraint primary key(order_ID,product_ID),
+	constraint FOREIGN KEY(order_ID) REFERENCES orders(order_ID) on delete cascade on update cascade,
+	constraint FOREIGN KEY(product_ID) REFERENCES product(product_ID) on delete cascade on update cascade
+);
+
+CREATE TABLE supplier(
+	supplier_ID VARCHAR(10) NOT NULL,
+	supplier_Name VARCHAR(50) NOT NULL,
+	supplier_NIC VARCHAR(12) NOT NULL, 
+	supplier_Address VARCHAR(75) NOT NULL,
+	supplier_Email VARCHAR(75),
+	supplier_Mobile_Number INT NOT NULL,
+	constraint primary key(supplier_ID)
+);
+
+CREATE TABLE GRN(
+	GRN_ID VARCHAR(10) NOT NULL,
+	supplier_ID VARCHAR(10) NOT NULL,
+	GRN_DATE DATE NOT NULL,
+	GRN_Time TIME NOT NULL,
+	constraint primary key(GRN_ID),
+	constraint FOREIGN KEY(supplier_ID) REFERENCES supplier(supplier_ID) on delete cascade on update cascade
+);
+
+CREATE TABLE GRN_Detail(
+	GRN_ID VARCHAR(10) NOT NULL,
+	product_ID VARCHAR(10) NOT NULL,
+	constraint primary key(GRN_ID,product_ID),
+	constraint FOREIGN KEY(GRN_ID) REFERENCES GRN(GRN_ID) on delete cascade on update cascade,
+	constraint FOREIGN KEY(product_ID) REFERENCES product(product_ID) on delete cascade on update cascade
+);
+
+CREATE TABLE supplier_Payment(
+	supplier_Payment_ID VARCHAR(10) NOT NULL,
+	GRN_ID VARCHAR(10) NOT NULL,
+	Price DECIMAL(10,2) NOT NULL,
+	supplier_Payment_Date DATE NOT NULL,
+	supplier_Payment_Time TIME NOT NULL, 
+	constraint primary key(supplier_Payment_ID),
+	constraint FOREIGN KEY(GRN_ID) REFERENCES GRN(GRN_ID) on delete cascade on update cascade
+);
+
+
